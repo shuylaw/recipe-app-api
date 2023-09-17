@@ -40,7 +40,7 @@ from recipe import serializers
             )
         ]
     )
-)    
+)
 class RecipeViewSet(viewsets.ModelViewSet):
     """View for manage recipe APIs."""
 
@@ -48,7 +48,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    
+
     def _params_to_ints(self, qs):
         """Converts a list of strings into integers."""
         return [int(str_id) for str_id in qs.split(",")]
@@ -64,11 +64,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if ingredients:
             ingredient_ids = self._params_to_ints(ingredients)
             queryset = queryset.filter(ingredients__id__in=ingredient_ids)
-        
+
         return queryset.filter(
             user=self.request.user
             ).order_by("-id").distinct()
-    
+
     def get_serializer_class(self):
         """Return the serializer class for the request."""
         if self.action == "list":
@@ -101,6 +101,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+
 @extend_schema_view(
     list=extend_schema(
         parameters=[
@@ -130,10 +131,11 @@ class BaseRecipeAttrViewSet(
         queryset = self.queryset
         if assigned_only:
             queryset = queryset.filter(recipe__isnull=False)
-            
+
         return queryset.filter(
             user=self.request.user
             ).order_by("-name").distinct()
+
 
 class TagViewSet(BaseRecipeAttrViewSet):
     """Manage tags in the database."""

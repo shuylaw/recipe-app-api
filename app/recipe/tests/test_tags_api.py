@@ -97,7 +97,7 @@ class PrivateTagsApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         tags = Tag.objects.filter(user=self.user)
         self.assertFalse(tags.exists())
-        
+
     def test_filter_tags_assigned_to_recipes(self):
         """Test listing tags to those assigned to recipes."""
         tag1 = Tag.objects.create(user=self.user, name="Breakfast")
@@ -109,14 +109,14 @@ class PrivateTagsApiTests(TestCase):
             user=self.user,
         )
         recipe.tags.add(tag1)
-        
+
         res = self.client.get(TAGS_URL, {"assigned_only": 1})
-        
+
         s1 = TagSerializer(tag1)
         s2 = TagSerializer(tag2)
         self.assertIn(s1.data, res.data)
         self.assertNotIn(s2.data, res.data)
-        
+
     def test_filtered_tags_unique(self):
         """Test filtered tags returns a unique list."""
         tag = Tag.objects.create(user=self.user, name="Breakfast")
@@ -135,7 +135,7 @@ class PrivateTagsApiTests(TestCase):
         )
         recipe1.tags.add(tag)
         recipe2.tags.add(tag)
-        
+
         res = self.client.get(TAGS_URL, {"assigned_only": 1})
-        
+
         self.assertEqual(len(res.data), 1)
